@@ -214,6 +214,7 @@ GameObject:
   - component: {fileID: 874971086}
   - component: {fileID: 874971085}
   - component: {fileID: 874971090}
+  - component: {fileID: 874971091}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -331,6 +332,19 @@ MonoBehaviour:
   focalPoint: {fileID: 0}
   hasPowerup: 0
   powerupIndicator: {fileID: 1856213414}
+--- !u!114 &874971091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 874971084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b8246ff5166e4a489d69ae4e08f7999, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 874971084}
 --- !u!1 &1211016355
 GameObject:
   m_ObjectHideFlags: 0
@@ -642,7 +656,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 2026861182513053441, guid: 6dc896a4dc9231c46bf35aa59f72b645, type: 3}
-  powerupPrefab: {fileID: 0}
+  powerupPrefab: {fileID: 733773662166632587, guid: 9ab8d16ebb34dd94b83195f57f24cc17, type: 3}
   enemyCount: 0
   waveNumber: 1
 --- !u!1001 &1856213413
