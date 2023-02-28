@@ -33,6 +33,10 @@ public class PlayerController : GameBehaviour
     bool GSonCooldown;
     public float GSknockbackSpeed;
 
+    public float GSexplosionForce;
+    public float GSexplosionUpdwards;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -70,8 +74,8 @@ public class PlayerController : GameBehaviour
             //move cool down
             
         }
-        
-        if(GSonCooldown) _P1UI.UpdateCooldownTimer(GScooldown, _P1UI.GScooldownText);
+
+        if (GSonCooldown) _P1UI.UpdateCooldownTimer(GScooldown, _P1UI.GScooldownText);
 
         //Roll out
         /*player gains momentum
@@ -84,7 +88,7 @@ public class PlayerController : GameBehaviour
 
     void GrandSlam()
     {
-        //moveActive = true; //player cannot move while slamming
+        moveActive = true; //player cannot move while slamming
         
         //lift player in air
         gameObject.transform.DOMoveY(GSheight, GSspeed).SetEase(GSease);
@@ -92,27 +96,36 @@ public class PlayerController : GameBehaviour
         //. slam player down
         gameObject.transform.DOMoveY(0, 0.1f).SetEase(GSeaseSlam);
         // any enemies within that radius are knocked back
-        Collider[] GSenemiesHit = Physics.OverlapSphere(gameObject.transform.position, GSradius);
-        foreach(var GSenemyHit in GSenemiesHit)
-        {
-            if(GSenemyHit.CompareTag("Enemy"))
-            {
-                print(GSenemyHit.name + " has been hit");
-                Vector3 dir = (gameObject.transform.position + GSenemyHit.gameObject.transform.position);
-                GSenemyHit.gameObject.transform.DOMove(dir, GSknockbackSpeed).SetEase(GSeaseKnockback);
-            }
-        }
-        
-        
+        StartCoroutine(GSKnockBack());
+
         moveActive = false;
 
         // add cool down
         GSonCooldown = true;
-        
+        _P1UI.GScooldownImage.fillAmount = 1;
+        _P1UI.remainingTime = GScooldown;
         // when cool down over reset move
         ExecuteAfterSeconds(GScooldown, ()=> GSonCooldown = CooldownTimer(GSonCooldown));
+
       
-        //
+    }
+
+    IEnumerator GSKnockBack()
+    {
+        yield return new WaitForSeconds(1.5f);
+        
+        Collider[] GSenemiesHit = Physics.OverlapSphere(gameObject.transform.position, GSradius);
+        for(int i =0; i < GSenemiesHit.Length; i++)
+        {
+            if (GSenemiesHit[i].CompareTag("Enemy"))
+            {
+                print(GSenemiesHit[i].name + " has been hit");
+                Vector3 dir = (gameObject.transform.position + GSenemiesHit[i].gameObject.transform.position);
+                Rigidbody enemyRB = GSenemiesHit [i].GetComponent<Rigidbody>();
+                enemyRB.AddExplosionForce(GSexplosionForce, gameObject.transform.position, GSradius, GSexplosionUpdwards);
+                //GSenemiesHit[i].gameObject.transform.DOMove(dir, GSknockbackSpeed).SetEase(GSeaseKnockback);
+            }
+        }
 
 
     }
