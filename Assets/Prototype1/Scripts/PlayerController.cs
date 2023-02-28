@@ -21,6 +21,7 @@ public class PlayerController : GameBehaviour
     bool moveActive;
     public float speed;
     public Ease speedEase;
+    public GameObject mouseTarget;
 
     [Header("Grand Slam")]
     public float GSheight;
@@ -29,9 +30,7 @@ public class PlayerController : GameBehaviour
     public float GScooldown;
     public Ease GSease;
     public Ease GSeaseSlam;
-    public Ease GSeaseKnockback;
     bool GSonCooldown;
-    public float GSknockbackSpeed;
 
     public float GSexplosionForce;
     public float GSexplosionUpdwards;
@@ -43,6 +42,7 @@ public class PlayerController : GameBehaviour
     {
         rb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
+        mouseTarget.SetActive(false);
     }
 
     // Update is called once per frame
@@ -63,12 +63,17 @@ public class PlayerController : GameBehaviour
                 targetPos = hit.point;
                 targetPos = new Vector3(targetPos.x, gameObject.transform.position.y, targetPos.z);
                 gameObject.transform.DOMove(targetPos, speed).SetEase(speedEase);
+                mouseTarget.SetActive(true);
+                mouseTarget.transform.position = targetPos;
             }
             
         }
 
+        //turn off target pos indicator
+        if(Vector3.Distance(gameObject.transform.position,targetPos) < 0.5f) mouseTarget.SetActive(false);
+
         //Grand Slam
-        if(Input.GetKeyDown(KeyCode.Alpha1) && !GSonCooldown)
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !GSonCooldown)
         {
             GrandSlam();
             //move cool down
@@ -77,12 +82,7 @@ public class PlayerController : GameBehaviour
 
         if (GSonCooldown) _P1UI.UpdateCooldownTimer(GScooldown, _P1UI.GScooldownText);
 
-        //Roll out
-        /*player gains momentum
-         * player rolls forward
-         * anything in the path is knocked away
-         * add cool down
-         */
+        
 
     }
 
@@ -130,10 +130,20 @@ public class PlayerController : GameBehaviour
 
     }
 
+    void Rollout()
+    {
+        //Roll out
+        //player gains momentum
+        // player rolls forward
+        // anything in the path is knocked away
+        // add cool down
+        
+    }
+
+
     bool CooldownTimer(bool _moveOnCooldown)
     {
         _moveOnCooldown = false;
-        print("CAN USE MOVE AGAIN");
         return _moveOnCooldown;
     }
 
