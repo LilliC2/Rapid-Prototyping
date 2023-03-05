@@ -21,6 +21,8 @@ public class P1UIManager : GameBehaviour<P1UIManager>
     public float GSremainingTime;
     public float RremainingTime;
     bool isCoolDown;
+
+    public AudioSource waveUpdateSound;
     
 
     // Start is called before the first frame update
@@ -70,6 +72,7 @@ public class P1UIManager : GameBehaviour<P1UIManager>
 
     public void UpdateWave(int _waveNum)
     {
+        waveUpdateSound.Play();
         waveText.text = "Wave: " + _waveNum;
     }
 

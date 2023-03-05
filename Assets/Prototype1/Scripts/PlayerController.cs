@@ -19,6 +19,7 @@ public class PlayerController : GameBehaviour
 
 
     public GameObject respawnPoint;
+    public AudioSource respawnSound;
 
     [Header("Movement")]
     Vector3 targetPos;
@@ -42,6 +43,7 @@ public class PlayerController : GameBehaviour
     public Ease GSease;
     public Ease GSeaseSlam;
     bool GSonCooldown;
+    public AudioSource explosionSound;
 
     public float GSexplosionForce;
     public float GSexplosionUpdwards;
@@ -129,6 +131,7 @@ public class PlayerController : GameBehaviour
 
         //. slam player down
         gameObject.transform.DOMoveY(0, 0.3f).SetEase(GSeaseSlam);
+        explosionSound.Play();
         // any enemies within that radius are knocked back
         StartCoroutine(GSKnockBack());
 
@@ -153,6 +156,7 @@ public class PlayerController : GameBehaviour
         {
             if (GSenemiesHit[i].CompareTag("Enemy"))
             {
+                GSenemiesHit[i].GetComponent<ParticleSystem>().Play();
                 print(GSenemiesHit[i].name + " has been hit");
                 Vector3 dir = (gameObject.transform.position + GSenemiesHit[i].gameObject.transform.position);
                 Rigidbody enemyRB = GSenemiesHit [i].GetComponent<Rigidbody>();
@@ -168,7 +172,7 @@ public class PlayerController : GameBehaviour
     {
         moveActive = true;
 
-
+        gameObject.GetComponent<Renderer>().material.DOColor(Color.red, 0.5f);
         //player gains momentum
         //gameObject.transform.DORotate(new Vector3(gameObject.transform.rotation.x, 361, gameObject.transform.rotation.z),1,RotateMode.FastBeyond360);
 
@@ -204,7 +208,7 @@ public class PlayerController : GameBehaviour
                 enemyRB.AddExplosionForce(RexplosionForce, gameObject.transform.position, Rraidus, RexplosionUpwards);
                 RenemyInRange[i].GetComponent<ParticleSystem>().Play();
 
-                gameObject.GetComponent<Renderer>().material.DOColor(Color.red, 0.5f);
+                
                 Vector3 enemyPos = RenemyInRange[i].transform.position;
                 gameObject.transform.DOMove(enemyPos, 0.5f).SetEase(Rease);
                 break;
@@ -225,6 +229,7 @@ public class PlayerController : GameBehaviour
   
         if(other.CompareTag("Respawn"))
         {
+            respawnSound.Play();
             _P1GM.score = 0;
             _P1UI.UpdateScore(_P1GM.score);
             gameObject.transform.DOMove(respawnPoint.transform.position, 1);

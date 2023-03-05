@@ -22,9 +22,11 @@ public class SpawnManager : GameBehaviour
     // Update is called once per frame
     void Update()
     {
+        print(enemyCount);
         enemyCount = FindObjectsOfType<Enemy>().Length;
         if(enemyCount == 0)
         {
+            print(waveNumber);
             waveNumber++;
             _P1UI.UpdateWave(waveNumber);
             SpawnEnemyWave(waveNumber);
@@ -42,8 +44,10 @@ public class SpawnManager : GameBehaviour
 
     void SpawnEnemyWave(int enemiesToSpawn)
     {
+        print("spawning enemies: " + enemiesToSpawn);
         for(int i = 0; i < enemiesToSpawn; i++)
         {
+            print("spawing");
             Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
         }
     }
