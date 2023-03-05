@@ -15,6 +15,9 @@ public class PlayerController : GameBehaviour
     public GameObject powerupIndicator;
     int enemyLayerMask = 3;
 
+    [SerializeField] ParticleSystem impactParticle = null;
+
+
     public GameObject respawnPoint;
 
     [Header("Movement")]
@@ -120,7 +123,7 @@ public class PlayerController : GameBehaviour
     void GrandSlam()
     {
         moveActive = true; //player cannot move while slamming
-        
+        gameObject.GetComponent<Renderer>().material.DOColor(Color.blue, 0.5f);
         //lift player in air
         gameObject.transform.DOMoveY(GSheight, GSspeed).SetEase(GSease);
 
@@ -199,9 +202,9 @@ public class PlayerController : GameBehaviour
             {
                 Rigidbody enemyRB = RenemyInRange[i].gameObject.GetComponent<Rigidbody>();
                 enemyRB.AddExplosionForce(RexplosionForce, gameObject.transform.position, Rraidus, RexplosionUpwards);
+                RenemyInRange[i].GetComponent<ParticleSystem>().Play();
 
-
-                gameObject.transform.GetComponent<Renderer>().material.color = Color.red;
+                gameObject.GetComponent<Renderer>().material.DOColor(Color.red, 0.5f);
                 Vector3 enemyPos = RenemyInRange[i].transform.position;
                 gameObject.transform.DOMove(enemyPos, 0.5f).SetEase(Rease);
                 break;
@@ -212,20 +215,14 @@ public class PlayerController : GameBehaviour
     
     bool CooldownTimer(bool _moveOnCooldown)
     {
+        gameObject.GetComponent<Renderer>().material.DOColor(Color.white, 0.1f);
         _moveOnCooldown = false;
         return _moveOnCooldown;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Powerup"))
-        {
-            hasPowerup = true;
-            Destroy(other.gameObject);
-            StartCoroutine(PowerupCountdownRoutine());
-            powerupIndicator.gameObject.SetActive(true);
-        }
-
+  
         if(other.CompareTag("Respawn"))
         {
             _P1GM.score = 0;
@@ -236,22 +233,9 @@ public class PlayerController : GameBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Enemy") && hasPowerup)
-        {
-            Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer = (collision.transform.position - enemyRigidbody.transform.position);
 
-            print("hit");
-            enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
-        }
     }
 
-    IEnumerator PowerupCountdownRoutine()
-    {
-        yield return new WaitForSeconds(7);
-        hasPowerup = false;
-        powerupIndicator.gameObject.SetActive(false);
-    }
 
     //private void OnDrawGizmos()
     //{

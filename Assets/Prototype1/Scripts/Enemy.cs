@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : GameBehaviour
+public class Enemy : GameBehaviour<Enemy>
 {
     Rigidbody enemyRb;
     GameObject player;
     public float speed;
+
+    [SerializeField] ParticleSystem impactParticle = null;
+    public bool once = true;
 
     // Start is called before the first frame update
     void Start()
@@ -30,5 +33,17 @@ public class Enemy : GameBehaviour
         }
     }
 
-    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+
+            impactParticle.Play();
+        }
+    }
+
+
+
+
+
 }
