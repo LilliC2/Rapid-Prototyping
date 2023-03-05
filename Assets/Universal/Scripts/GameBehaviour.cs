@@ -6,6 +6,7 @@ public class GameBehaviour : LC.Behaviour //inherits from
     //unquie to this project
     protected static UIManager _UI { get { return UIManager.Instance; } }
     protected static P1UIManager _P1UI { get { return P1UIManager.Instance; } }
+    protected static P1GameManager _P1GM { get { return P1GameManager.Instance; } }
 
 
 }

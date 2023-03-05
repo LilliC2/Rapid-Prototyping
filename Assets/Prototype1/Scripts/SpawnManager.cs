@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour
+public class SpawnManager : GameBehaviour
 {
     public GameObject enemyPrefab;
     public GameObject powerupPrefab;
@@ -13,8 +13,9 @@ public class SpawnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _P1UI.UpdateWave(waveNumber);
         SpawnEnemyWave(waveNumber);
-        Instantiate(powerupPrefab, GenerateSpawnPosition(), powerupPrefab.transform.rotation);
+        //Instantiate(powerupPrefab, GenerateSpawnPosition(), powerupPrefab.transform.rotation);
         
     }
 
@@ -25,8 +26,9 @@ public class SpawnManager : MonoBehaviour
         if(enemyCount == 0)
         {
             waveNumber++;
+            _P1UI.UpdateWave(waveNumber);
             SpawnEnemyWave(waveNumber);
-            Instantiate(powerupPrefab, GenerateSpawnPosition(), powerupPrefab.transform.rotation);
+            //Instantiate(powerupPrefab, GenerateSpawnPosition(), powerupPrefab.transform.rotation);
         }
     }
 

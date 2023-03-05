@@ -15,6 +15,7 @@ public class PlayerController : GameBehaviour
     public GameObject powerupIndicator;
     int enemyLayerMask = 3;
 
+    public GameObject respawnPoint;
 
     [Header("Movement")]
     Vector3 targetPos;
@@ -22,6 +23,13 @@ public class PlayerController : GameBehaviour
     public float speed;
     public Ease speedEase;
     public GameObject mouseTarget;
+
+    [Header("Grounded")]
+    bool isGrounded;
+    public Transform groundCheck;
+    public float groundDistance = 0.4f;
+    public LayerMask groundMask;
+
 
     [Header("Grand Slam")]
     public float GSheight;
@@ -35,7 +43,15 @@ public class PlayerController : GameBehaviour
     public float GSexplosionForce;
     public float GSexplosionUpdwards;
 
-
+    [Header("Rollout")]
+    public GameObject rolloutTest;
+    bool RonCooldown;
+    public float RdetectRadius;
+    public Ease Rease;
+    public float Rraidus;
+    public float RexplosionUpwards;
+    public float RexplosionForce;
+    public float RcooldownTime;
 
     // Start is called before the first frame update
     void Start()
@@ -48,23 +64,30 @@ public class PlayerController : GameBehaviour
     // Update is called once per frame
     void Update()
     {
-        //float forwardInput = Input.GetAxis("Vertical");
-        //rb.AddForce(focalPoint.transform.forward * speed * forwardInput);
-        //powerupIndicator.transform.position = transform.position + new Vector3(0, -0.5f, 0);
+        //check if grounded
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
 
         //Move to mouse click
-        if(Input.GetMouseButtonDown(0) && !moveActive)
+        if (Input.GetMouseButtonDown(0) && !moveActive && isGrounded)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit))
             {
-                targetPos = hit.point;
-                targetPos = new Vector3(targetPos.x, gameObject.transform.position.y, targetPos.z);
-                gameObject.transform.DOMove(targetPos, speed).SetEase(speedEase);
-                mouseTarget.SetActive(true);
-                mouseTarget.transform.position = targetPos;
+                if(hit.collider.CompareTag("Ground"))
+                {
+                    targetPos = hit.point;
+                    targetPos = new Vector3(targetPos.x, gameObject.transform.position.y, targetPos.z);
+                    gameObject.transform.DOMove(targetPos, speed).SetEase(speedEase);
+                    mouseTarget.SetActive(true);
+                    gameObject.transform.LookAt(targetPos);
+                    mouseTarget.transform.position = targetPos;
+                }
+
+                
+                
             }
             
         }
@@ -76,13 +99,21 @@ public class PlayerController : GameBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1) && !GSonCooldown)
         {
             GrandSlam();
-            //move cool down
+            
             
         }
-
-        if (GSonCooldown) _P1UI.UpdateCooldownTimer(GScooldown, _P1UI.GScooldownText);
-
+        //move cool down
+        if (GSonCooldown) _P1UI.UpdateCooldownTimerGS(GScooldown, _P1UI.GScooldownText);
         
+        
+        if (Input.GetKeyDown(KeyCode.Alpha2) && !RonCooldown)
+        {
+            print("Rollout");
+            Rollout();
+            //move cool down
+
+        }
+        if (RonCooldown) _P1UI.UpdateCooldownTimerR(RcooldownTime, _P1UI.RcooldownText);
 
     }
 
@@ -94,7 +125,7 @@ public class PlayerController : GameBehaviour
         gameObject.transform.DOMoveY(GSheight, GSspeed).SetEase(GSease);
 
         //. slam player down
-        gameObject.transform.DOMoveY(0, 0.1f).SetEase(GSeaseSlam);
+        gameObject.transform.DOMoveY(0, 0.3f).SetEase(GSeaseSlam);
         // any enemies within that radius are knocked back
         StartCoroutine(GSKnockBack());
 
@@ -103,7 +134,7 @@ public class PlayerController : GameBehaviour
         // add cool down
         GSonCooldown = true;
         _P1UI.GScooldownImage.fillAmount = 1;
-        _P1UI.remainingTime = GScooldown;
+        _P1UI.GSremainingTime = GScooldown;
         // when cool down over reset move
         ExecuteAfterSeconds(GScooldown, ()=> GSonCooldown = CooldownTimer(GSonCooldown));
 
@@ -132,15 +163,53 @@ public class PlayerController : GameBehaviour
 
     void Rollout()
     {
-        //Roll out
+        moveActive = true;
+
+
         //player gains momentum
+        //gameObject.transform.DORotate(new Vector3(gameObject.transform.rotation.x, 361, gameObject.transform.rotation.z),1,RotateMode.FastBeyond360);
+
         // player rolls forward
         // anything in the path is knocked away
+        StartCoroutine(RKnockBack());
+        moveActive = false;
+
         // add cool down
+        RonCooldown = true;
+        _P1UI.RcooldownImage.fillAmount = 1;
+        _P1UI.RremainingTime = RcooldownTime;
+
+
+        ExecuteAfterSeconds(RcooldownTime, () => RonCooldown = CooldownTimer(RonCooldown));
+
         
+        
+        
+
     }
 
+    IEnumerator RKnockBack()
+    {
+        print("Knockback");
+        yield return new WaitForSeconds(1f);
+        Collider[] RenemyInRange = Physics.OverlapSphere(gameObject.transform.position, RdetectRadius);
+        for (int i = 0; i < RenemyInRange.Length; i++)
+        {
+            if (RenemyInRange[i].CompareTag("Enemy"))
+            {
+                Rigidbody enemyRB = RenemyInRange[i].gameObject.GetComponent<Rigidbody>();
+                enemyRB.AddExplosionForce(RexplosionForce, gameObject.transform.position, Rraidus, RexplosionUpwards);
 
+
+                gameObject.transform.GetComponent<Renderer>().material.color = Color.red;
+                Vector3 enemyPos = RenemyInRange[i].transform.position;
+                gameObject.transform.DOMove(enemyPos, 0.5f).SetEase(Rease);
+                break;
+            }
+            
+        }
+    }
+    
     bool CooldownTimer(bool _moveOnCooldown)
     {
         _moveOnCooldown = false;
@@ -155,6 +224,13 @@ public class PlayerController : GameBehaviour
             Destroy(other.gameObject);
             StartCoroutine(PowerupCountdownRoutine());
             powerupIndicator.gameObject.SetActive(true);
+        }
+
+        if(other.CompareTag("Respawn"))
+        {
+            _P1GM.score = 0;
+            _P1UI.UpdateScore(_P1GM.score);
+            gameObject.transform.DOMove(respawnPoint.transform.position, 1);
         }
     }
 
@@ -177,10 +253,13 @@ public class PlayerController : GameBehaviour
         powerupIndicator.gameObject.SetActive(false);
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        //Use the same vars you use to draw your Overlap SPhere to draw your Wire Sphere.
-        Gizmos.DrawWireSphere(gameObject.transform.position, GSradius);
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    //Use the same vars you use to draw your Overlap SPhere to draw your Wire Sphere.
+    //    Gizmos.DrawWireSphere(gameObject.transform.position, GSradius);
+    //    Gizmos.color = Color.green;
+    //    Gizmos.DrawWireSphere(groundCheck.transform.position, groundDistance);
+
+    //}
 }
