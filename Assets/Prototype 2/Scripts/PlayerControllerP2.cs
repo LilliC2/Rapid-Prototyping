@@ -3,61 +3,67 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerControllerP2 : GameBehaviour
+public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
 {
     [Header("Movement Setting")]
     public CharacterController characterController;
     public Transform cam;
     public float speed = 6f;
-
-    //directinal
     public float turnSmoothTime = 0.1f;
-
-    //jumping
-    public float gravity = -9.81f;
-    public float jumpHeight = 2f;
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
     Vector3 velocity;
     bool isGrounded;
-
-    public GameObject firingPoint;
-    public GameObject bulletPrefab;
+    
 
     [Header("Player Stats")]
+    public float playerHealth = 100; //temp\
+    public float skillPoints = 0;
+    public float expPoints = 0;
+    public float expTilLvlUp = 10;
+    public float playerLvl = 0;
 
-    public float playerHealth = 100; //temp
-    
-    //[Header("UI")]
 
-    public GameObject testObject;
-
-    [Header("Projectile")]
+    [Header("Bullet Stats")]
+    public GameObject firingPoint;
+    public GameObject bulletPrefab;
     public float bulletSpeed;
     bool bulletShot = false;
     public float timeBetweenShots;
 
+    [Header("UI")]
+    public GameObject skillTree;
+
 
     private void Start()
     {
-        
 
-
-
+        skillTree.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        //Shoot
         if (Input.GetMouseButton(0))
         {
             print("mouse 0");
             FireProjectile();
         }
 
+        //open skill tree
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            print("open tree");
+            skillTree.SetActive(true);
+        }
 
+
+        //exit skill tree
+        if (Input.GetKeyDown(KeyCode.Escape) && skillTree.activeSelf == true) skillTree.SetActive(false);
+
+        #region movement
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
@@ -73,11 +79,7 @@ public class PlayerControllerP2 : GameBehaviour
 
         characterController.Move(direction.normalized * speed * Time.deltaTime);
 
-        if (direction.magnitude >= 0.1f)
-        {
-            
-        }
-
+        #endregion
 
     }
 
@@ -93,19 +95,24 @@ public class PlayerControllerP2 : GameBehaviour
             {
                 Vector3 target = hit.point;
                 target = new Vector3(target.x, 0.5f, target.z);
-                testObject.transform.position = target;
 
 
                 //spawn bullet
-                Transform bulletTransform = Instantiate(bulletPrefab, firingPoint.transform.position, Quaternion.identity);
+                GameObject bullet = Instantiate(bulletPrefab, firingPoint.transform.position, Quaternion.identity);
+                Transform bulletTransform = bullet.transform;
+
+                //shoot direction
+                Vector3 shootDir = target - firingPoint.transform.position.normalized;
+
+                bulletTransform.GetComponent<Bullet>().Setup(shootDir,bulletSpeed);
 
                 bulletShot = true;
+                ExecuteAfterSeconds(timeBetweenShots, () => ResetBullet());
 
                 //https://www.youtube.com/watch?v=Nke5JKPiQTw 6:22
             }
         }
 
-        if (bulletShot) ExecuteAfterSeconds(timeBetweenShots, () => ResetBullet());
 
     }
 

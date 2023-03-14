@@ -2,22 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Bullet : GameBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Vector3 shootDir;
+    float bulletSpeed;
+
+    public void Setup(Vector3 _shootDir, float _bulletSpeed)
     {
+        this.shootDir = _shootDir;
+        this.bulletSpeed = _bulletSpeed;
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
-    }
+        transform.position += shootDir * bulletSpeed *Time.deltaTime;
 
-    public void Setup(Vector3 _shootDir)
-    {
-
+        ExecuteAfterSeconds(2, () => Destroy(this));
     }
 }
