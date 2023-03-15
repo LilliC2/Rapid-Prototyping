@@ -23,7 +23,7 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
     public float expPoints = 0;
     public float expTilLvlUp = 10;
     public float playerLvl = 0;
-
+    
 
     [Header("Bullet Stats")]
     public GameObject firingPoint;
@@ -31,6 +31,7 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
     public float bulletSpeed;
     bool bulletShot = false;
     public float timeBetweenShots;
+    public float bulletDmg;
 
     [Header("UI")]
     public GameObject skillTree;

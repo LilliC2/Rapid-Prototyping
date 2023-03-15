@@ -20,4 +20,12 @@ public class Bullet : GameBehaviour
 
         ExecuteAfterSeconds(2, () => Destroy(this));
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Walls"))
+        {
+            Destroy(this);
+        }
+    }
 }
