@@ -29,16 +29,22 @@ public class Playtime : GameBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D)) MovePlayer(Direction.Right);
-        if (Input.GetKeyDown(KeyCode.A)) MovePlayer(Direction.Left);
-        if (Input.GetKeyDown(KeyCode.W)) MovePlayer(Direction.Up);
-        if (Input.GetKeyDown(KeyCode.S)) MovePlayer(Direction.Down);
-        if (Input.GetKeyDown(KeyCode.R)) ScalePlayer(Vector3.one);
+        if(_GAMESTATE.gamestate != Gamestate.Playing)
+            return;
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ChangePlayerColour();
-        }
+            if (Input.GetKeyDown(KeyCode.D)) MovePlayer(Direction.Right);
+            if (Input.GetKeyDown(KeyCode.A)) MovePlayer(Direction.Left);
+            if (Input.GetKeyDown(KeyCode.W)) MovePlayer(Direction.Up);
+            if (Input.GetKeyDown(KeyCode.S)) MovePlayer(Direction.Down);
+            if (Input.GetKeyDown(KeyCode.R)) ScalePlayer(Vector3.one);
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ChangePlayerColour();
+            }
+        
+
+        
     }
 
     void MovePlayer(Direction _direction)
