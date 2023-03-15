@@ -64,6 +64,8 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
         //exit skill tree
         if (Input.GetKeyDown(KeyCode.Escape) && skillTree.activeSelf == true) skillTree.SetActive(false);
 
+        EXPHandler();
+
         #region movement
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -115,6 +117,18 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
         }
 
 
+    }
+
+    void EXPHandler()
+    {
+        if(expPoints >= expTilLvlUp)
+        {
+            playerLvl++;
+            expTilLvlUp += 2;
+            expPoints = 0;
+            skillPoints += 4;
+
+        }
     }
 
     void ResetBullet()

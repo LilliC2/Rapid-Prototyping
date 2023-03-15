@@ -28,15 +28,15 @@ public class EnemyP2 : GameBehaviour
         Vector3 lookDirection = (player.transform.position - transform.position).normalized;
         enemyRb.AddForce(lookDirection * speed);
 
-        //if (enemyHealth < 0)
-        //{
-        //    print("Dead");
-        //    //give player xp
-        //    _PC2.expPoints += 2;
+        if (enemyHealth == 0)
+        {
+            print("Dead");
+            //give player xp
+            _PC2.expPoints += 2;
 
-        //    //destroy
-        //    Destroy(gameObject);
-        //}
+            //destroy
+            Destroy(gameObject);
+        }
 
     }
 
