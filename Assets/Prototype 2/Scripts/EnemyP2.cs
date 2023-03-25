@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyP2 : GameBehaviour
 {
@@ -9,16 +10,19 @@ public class EnemyP2 : GameBehaviour
     public GameObject player;
     public float speed;
 
-    public float enemyHealth = 20;
-    public float enemyDmg;
+    float enemyHealth = _EM2.enemyHealth;
+    float enemyDmg = _EM2.enemyDmg;
 
     public float knockBack = 50;
+
+    private NavMeshAgent enemyAgent;
 
     // Start is called before the first frame update
     void Start()
     {
         enemyRb = GetComponent<Rigidbody>();
         player = GameObject.Find("Player");
+        enemyAgent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -26,7 +30,7 @@ public class EnemyP2 : GameBehaviour
     {
 
         Vector3 lookDirection = (player.transform.position - transform.position).normalized;
-        enemyRb.AddForce(lookDirection * speed);
+        enemyAgent.SetDestination(player.transform.position);
 
         if (enemyHealth == 0)
         {

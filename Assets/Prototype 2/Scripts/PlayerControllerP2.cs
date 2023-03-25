@@ -35,6 +35,7 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
 
     [Header("UI")]
     public GameObject skillTree;
+    float tweenTime = 2;
 
 
     private void Start()
@@ -131,9 +132,30 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
         }
     }
 
+    void Hit()
+    {
+        playerHealth -= _EM2.enemyDmg;
+        this.transform.GetComponent<Renderer>().material.DOColor(Color.red, 0.5f);
+        this.transform.GetComponent<Renderer>().material.DOColor(Color.white,0.5f);
+    }
+
+    void ShakeCamera()
+    {
+        _UI.TweenScore();
+        Camera.main.DOShakePosition(tweenTime / 2, 0.4f);
+    }
+
     void ResetBullet()
     {
         bulletShot = false;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if((collision.gameObject.CompareTag("Enemy")))
+        {
+            Hit();
+        }
     }
 
 }

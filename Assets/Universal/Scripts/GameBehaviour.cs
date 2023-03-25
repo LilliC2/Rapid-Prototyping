@@ -9,6 +9,7 @@ public class GameBehaviour : LC.Behaviour //inherits from
     protected static P1GameManager _P1GM { get { return P1GameManager.Instance; } }
     protected static PlayerControllerP2 _PC2 { get { return PlayerControllerP2.Instance; } }
     protected static GameStateManager _GAMESTATE { get { return GameStateManager.Instance; } }
+    protected static EnemyManagerP2 _EM2 { get { return EnemyManagerP2.Instance; } }
 
     public enum Gamestate { Title, Pause, Instructions, Playing, GameOver }
 
