@@ -32,6 +32,9 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
     bool bulletShot = false;
     public float timeBetweenShots;
     public float bulletDmg;
+    public float bulletForce;
+
+
 
     [Header("UI")]
     public GameObject skillTree;
@@ -47,6 +50,8 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
     // Update is called once per frame
     void Update()
     {
+        Raycast();
+
         //Shoot
         if (Input.GetMouseButton(0))
         {
@@ -94,21 +99,20 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
 
         if (Physics.Raycast(ray, out hit))
         {
-
             if(!bulletShot)
             {
                 Vector3 target = hit.point;
                 target = new Vector3(target.x, 0.5f, target.z);
 
-
+                
                 //spawn bullet
-                GameObject bullet = Instantiate(bulletPrefab, firingPoint.transform.position, Quaternion.identity);
-                Transform bulletTransform = bullet.transform;
+                GameObject bullet = Instantiate(bulletPrefab, firingPoint.transform.position, firingPoint.transform.rotation);
+                bullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * bulletForce);
+                Destroy(bullet, 2.5f);
 
                 //shoot direction
-                Vector3 shootDir = target - firingPoint.transform.position.normalized;
 
-                bulletTransform.GetComponent<Bullet>().Setup(shootDir,bulletSpeed);
+                
 
                 bulletShot = true;
                 ExecuteAfterSeconds(timeBetweenShots, () => ResetBullet());
@@ -118,6 +122,19 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
         }
 
 
+    }
+
+    void Raycast()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            Vector3 target = hit.point;
+            target = new Vector3(target.x, 0.5f, target.z);
+            gameObject.transform.LookAt(target);
+        }
+            
     }
 
     void EXPHandler()
