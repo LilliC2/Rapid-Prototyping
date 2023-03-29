@@ -25,10 +25,11 @@ namespace prototype3
 
         }
 
-        public void GripMeterCountdown()
+        public void GripMeterCountdown(float _timeRemaining)
         {
-            timeRemaining -= 1 *Time.deltaTime;
-            gripMeter.fillAmount -= 1 / 3 * Time.deltaTime;
+            print("grip");
+            _timeRemaining -= 1 *Time.deltaTime;
+            gripMeter.fillAmount -= 1 / _timeRemaining * Time.deltaTime;
             if (gripMeter.fillAmount <= 0) gripMeter.fillAmount = 0;
 
         }

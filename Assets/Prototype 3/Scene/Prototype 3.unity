@@ -1053,6 +1053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d848aa9189ad8474599272623ba1e66a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroy: 0
   hookshotObject: {fileID: 1204144295}
   hookshot: {fileID: 1204144296}
   firingPoint: {fileID: 1415607923}
@@ -1870,8 +1871,8 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 1
+        time: 0.027931213
+        value: 0.2389946
         inSlope: 0
         outSlope: 0
         tangentMode: 0

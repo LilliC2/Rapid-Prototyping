@@ -5,7 +5,7 @@ using DG.Tweening;
 
 namespace prototype3
 {
-    public class PlayerController : GameBehaviour
+    public class PlayerController : GameBehaviour<PlayerController>
     {
         public GameObject hookshotObject;
         public LineRenderer hookshot;
@@ -20,6 +20,7 @@ namespace prototype3
         float distance;
 
         Rigidbody rb;
+        bool calledGrip; 
 
         bool shot = false;
 
@@ -34,7 +35,7 @@ namespace prototype3
         // Update is called once per frame
         void Update()
         {
-            float horizontal = Input.GetAxisRaw("Horizontal");
+            float horizontal = -Input.GetAxis("Horizontal");
 
             gameObject.transform.Rotate(0, 0, horizontal);
             hookshot.SetPosition(0, firingPoint.transform.position);
@@ -82,7 +83,14 @@ namespace prototype3
 
         IEnumerator Grip(Vector3 _lastDestination)
         {
-            _UI2.GripMeterCountdown();
+
+            hookshotObject.SetActive(false);
+            float count = 3;
+
+            count  -= 1 * Time.deltaTime;
+            _UI2.GripMeterCountdown(count);
+            calledGrip = true;
+
             print("grip");
 
             yield return new WaitForSeconds(3);
@@ -101,6 +109,7 @@ namespace prototype3
             {
                 print("on ground");
                 rb.useGravity = false;
+                calledGrip = false;
             }
         }
 
