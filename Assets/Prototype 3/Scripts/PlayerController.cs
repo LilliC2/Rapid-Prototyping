@@ -56,6 +56,8 @@ namespace prototype3
                 }
             }
 
+            print("gravity: " + rb.useGravity);
+
 
             if(shot)
             {

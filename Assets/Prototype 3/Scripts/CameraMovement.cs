@@ -16,7 +16,7 @@ public class CameraMovement : GameBehaviour
     void Update()
     {
         
-        transform.position = new Vector3(0, player.transform.position.y+5, -11);
+        transform.position = new Vector3(0, player.transform.position.y+5, -13.8f);
 
     }
 }

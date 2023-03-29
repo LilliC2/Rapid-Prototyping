@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PauseController : GameBehaviour
@@ -24,8 +25,15 @@ public class PauseController : GameBehaviour
 
    public void Pause()
     {
+        Cursor.lockState = isPaused ? CursorLockMode.Locked : CursorLockMode.None;
         isPaused = !isPaused; //flip switch
+        print("Paused: " + isPaused);
         pausePanel.SetActive(isPaused);
         Time.timeScale = isPaused ? 0 : 1; //if isPaused is true, timeScale 0 else 1
+    }
+
+    public void Exit()
+    {
+        Application.Quit();
     }
 }
