@@ -57,8 +57,8 @@ namespace prototype3
                 }
             }
 
-            print("gravity: " + rb.useGravity);
 
+            //MovePlayer();
 
             if(shot)
             {
@@ -77,8 +77,9 @@ namespace prototype3
 
         void MovePlayer()
         {
-            
-            gameObject.transform.DOMove(destinationPoint, 1);
+            print("Move!");
+            //rb.MovePosition(destination * 3 * Time.deltaTime);
+            rb.AddForce(destination * 50);
         }
 
         IEnumerator Grip(Vector3 _lastDestination)
