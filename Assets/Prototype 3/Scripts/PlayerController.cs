@@ -70,9 +70,14 @@ namespace prototype3
                     StartCoroutine(Grip(destination));
                 }
             }
-            
 
 
+            if (rb.useGravity == false)
+            {
+                print("grav off");
+
+            }
+            else print("grave on");
         }
 
         void MovePlayer()
