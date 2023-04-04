@@ -20,9 +20,10 @@ namespace prototype3
         float distance;
 
         Rigidbody rb;
-        bool calledGrip; 
+        bool calledGrip;
 
         bool shot = false;
+        bool move = false;
 
         // Start is called before the first frame update
         void Start()
@@ -43,83 +44,93 @@ namespace prototype3
             {
                 if (Physics.Raycast(firingPoint.transform.position, firingPoint.transform.forward, out RaycastHit raycastHit))
                 {
-                    if(raycastHit.collider.CompareTag("Walls"))
+                    if (raycastHit.collider.CompareTag("Walls"))
                     {
+                        _UI2.gripMeter.fillAmount = 1;
                         shot = true;
                         hookshotObject.SetActive(true);
-                        destination = raycastHit.transform.position;
+                        destination = new Vector3(raycastHit.point.x,raycastHit.point.y,5);
                         destinationPoint = raycastHit.point;
                         hookshot.SetPosition(1, raycastHit.point);
 
-                        ExecuteAfterSeconds(movementSpeed, () => MovePlayer());
-                        
+                        move = true;
+
                     }
                 }
+
+
             }
 
+            print("grav status: " +rb.useGravity);
 
             //MovePlayer();
 
-            if(shot)
+            if (shot)
             {
                 distance = (Vector3.Distance(destination, gameObject.transform.position));
-               
-                if (distance < 3f)
+
+                if (distance < 1f)
                 {
                     print("at destinaation");
-                    StartCoroutine(Grip(destination));
+
+                    
                 }
             }
 
+        }
 
-            if (rb.useGravity == false)
-            {
-                print("grav off");
-
-            }
-            else print("grave on");
+        private void FixedUpdate()
+        {
+            if (move) MovePlayer();
         }
 
         void MovePlayer()
         {
-            print("Move!");
+            print("turning off grav");
+            rb.useGravity = false;
+                print("Move!");
             //rb.MovePosition(destination * 3 * Time.deltaTime);
-            rb.AddForce(destination * 50);
+            var step = movementSpeed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position,destination, step);
         }
 
         IEnumerator Grip(Vector3 _lastDestination)
         {
 
-            hookshotObject.SetActive(false);
-            float count = 3;
+                hookshotObject.SetActive(false);
+                float count = 3;
 
-            count  -= 1 * Time.deltaTime;
-            _UI2.GripMeterCountdown(count);
-            calledGrip = true;
+                count -= 1 * Time.deltaTime;
+                _UI2.GripMeterCountdown(count);
+                calledGrip = true;
 
-            print("grip");
+                print("Holding!");
 
-            yield return new WaitForSeconds(3);
+                yield return new WaitForSeconds(3);
 
-            if(destination == _lastDestination)
-            {
-                shot = false;
-                rb.useGravity = true;
-            }
+                if (destination == _lastDestination)
+                {
+                    print("Turning on Grav");
+
+                    shot = false;
+                    rb.useGravity = true;
+                }
 
         }
 
         private void OnCollisionEnter(Collision collision)
         {
-            if(collision.collider.CompareTag("Ground"))
+            if (collision.collider.CompareTag("Walls"))
             {
-                print("on ground");
+                move = false;
+                StartCoroutine(Grip(destination));
+                print("turning off grav");
                 rb.useGravity = false;
-                calledGrip = false;
+
             }
         }
 
-    }
 
-    
+
+    }
 }
