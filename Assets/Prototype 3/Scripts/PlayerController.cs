@@ -72,8 +72,8 @@ namespace prototype3
                 if (distance < 1f)
                 {
                     print("at destinaation");
+                    StartCoroutine(Grip(destination));
 
-                    
                 }
             }
 
@@ -88,8 +88,6 @@ namespace prototype3
         {
             print("turning off grav");
             rb.useGravity = false;
-                print("Move!");
-            //rb.MovePosition(destination * 3 * Time.deltaTime);
             var step = movementSpeed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position,destination, step);
         }
@@ -123,7 +121,7 @@ namespace prototype3
             if (collision.collider.CompareTag("Walls"))
             {
                 move = false;
-                StartCoroutine(Grip(destination));
+                //StartCoroutine(Grip(destination));
                 print("turning off grav");
                 rb.useGravity = false;
 
