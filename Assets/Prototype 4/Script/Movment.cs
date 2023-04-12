@@ -16,7 +16,7 @@ public class Movment : GameBehaviour<Movment>
     public GameObject antPrefab;
     public GameObject spawnAnt;
 
-    private List<GameObject> AntLine = new List<GameObject>();
+    public List<GameObject> AntLine = new List<GameObject>();
     //positions queen ant has travelled
     private List<Vector3> PositionHistory = new List<Vector3>();
     bool antTunnel = false;
@@ -65,22 +65,30 @@ public class Movment : GameBehaviour<Movment>
         AntLine.Add(ant);
     }
 
+    public void ShrinkColony()
+    {
+        int index = AntLine.Count;
+        print(index);
+        Destroy(AntLine[index - 1]);
+        AntLine.Remove(AntLine[index - 1]);
+    }
+
     private void AntTunnel(string _wallName)
     {
         antTunnel = true;
         switch(_wallName)
         {
             case "TopWall":
-                transform.position = new Vector3(transform.position.x, transform.position.y, -27);
+                transform.position = new Vector3(transform.position.x, transform.position.y, -26);
                 break;
             case "BottomWall":
-                transform.position = new Vector3(transform.position.x, transform.position.y, 27);
+                transform.position = new Vector3(transform.position.x, transform.position.y, 26);
                 break;
             case "LeftWall":
-                transform.position = new Vector3(27f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(26f, transform.position.y, transform.position.z);
                 break;
             case "RightWall":
-                transform.position = new Vector3(-27f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(-26f, transform.position.y, transform.position.z);
                 break;
 
 
@@ -107,6 +115,23 @@ public class Movment : GameBehaviour<Movment>
             if (tempTxt.text == _EG.correctAnswer.ToString())
             {
                 _GM4.solved = true;
+            }
+            else
+            {
+                print("Ant line = " + AntLine.Count);
+                if(AntLine.Count != 0)
+                {
+                    _GM4.solved = false;
+                    ShrinkColony();
+                    _MS.DestroyWrongAnswer(other.gameObject);
+                }
+                else
+                {
+                    //u lose
+                    _GM4.gameStates = prototype4.GameManager.GameStates.Lose;
+                }
+
+                
             }
 
         }

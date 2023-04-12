@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Walls
   - Bullet
+  - Food
   layers:
   - Default
   - TransparentFX

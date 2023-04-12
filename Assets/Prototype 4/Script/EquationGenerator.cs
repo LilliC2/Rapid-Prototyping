@@ -12,6 +12,8 @@ public class EquationGenerator : GameBehaviour<EquationGenerator>
     public int numberTwo;
     public int correctAnswer;
 
+    public string question;
+
     public List<int> dummyAnswers;
 
     void Update()
@@ -47,6 +49,7 @@ public class EquationGenerator : GameBehaviour<EquationGenerator>
         correctAnswer = numberOne * numberTwo;
 
         Debug.Log(numberOne + " x " + numberTwo + " = " + correctAnswer);
+        question = numberOne + " x " + numberTwo + " = ?";
 
         GenerateDummyAnswers();
     }
@@ -58,6 +61,7 @@ public class EquationGenerator : GameBehaviour<EquationGenerator>
         correctAnswer = numberOne + numberTwo;
 
         Debug.Log(numberOne + " + " + numberTwo + " = " + correctAnswer);
+        question = numberOne + " + " + numberTwo + " = ?";
 
         GenerateDummyAnswers();
     }
@@ -69,6 +73,7 @@ public class EquationGenerator : GameBehaviour<EquationGenerator>
         correctAnswer = numberOne - numberTwo;
 
         Debug.Log(numberOne + " - " + numberTwo + " = " + correctAnswer);
+        question = numberOne + " - " + numberTwo + " = ?";
 
         GenerateDummyAnswers();
     }
@@ -80,6 +85,7 @@ public class EquationGenerator : GameBehaviour<EquationGenerator>
         correctAnswer = numberOne / numberTwo;
         correctAnswer = Mathf.RoundToInt(correctAnswer);
         Debug.Log(numberOne + " / " + numberTwo + " = " + correctAnswer);
+        question = numberOne + " / " + numberTwo + " = ?";
         GenerateDummyAnswers();
     }
 

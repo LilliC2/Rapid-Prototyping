@@ -55,7 +55,7 @@ public class MathSpawning : GameBehaviour<MathSpawning>
 
     Vector3 RandomSpawnPoint()
     {
-        Vector3 pos = new Vector3(RandomFloatBetweenTwoFloats(-24, 24), 1f, RandomFloatBetweenTwoFloats(-24, 24));
+        Vector3 pos = new Vector3(RandomFloatBetweenTwoFloats(-20, 20), 1f, RandomFloatBetweenTwoFloats(-20, 20));
         return pos;
     }
 
@@ -66,6 +66,13 @@ public class MathSpawning : GameBehaviour<MathSpawning>
             GameObject.Destroy(foodToDestroy);
         FoodGenerated.Clear();
         
+    }
+
+    public void DestroyWrongAnswer(GameObject _food)
+    {
+        int index = FoodGenerated.IndexOf(_food);
+        FoodGenerated.RemoveAt(index);
+        Destroy(_food);
     }
 
 
