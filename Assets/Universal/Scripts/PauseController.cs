@@ -25,6 +25,8 @@ public class PauseController : GameBehaviour
 
    public void Pause()
     {
+        _GM4.gameStates = prototype4.GameManager.GameStates.Pause;
+
         Cursor.lockState = isPaused ? CursorLockMode.Locked : CursorLockMode.None;
         isPaused = !isPaused; //flip switch
         print("Paused: " + isPaused);

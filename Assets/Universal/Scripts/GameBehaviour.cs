@@ -13,7 +13,9 @@ public class GameBehaviour : LC.Behaviour //inherits from
     protected static EnemyManagerP2 _EM2 { get { return EnemyManagerP2.Instance; } }
     protected static EquationGenerator _EG { get { return EquationGenerator.Instance; } }
     protected static MathSpawning _MS { get { return MathSpawning.Instance; } }
+    protected static Movment _PC4 { get { return Movment.Instance; } }
     protected static prototype3.UIManager _UI2 { get { return prototype3.UIManager.Instance; } }
+    protected static prototype4.GameManager _GM4 { get { return prototype4.GameManager.Instance; } }
 
     public enum Gamestate { Title, Pause, Instructions, Playing, GameOver }
 

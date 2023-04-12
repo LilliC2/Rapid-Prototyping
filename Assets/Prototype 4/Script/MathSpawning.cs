@@ -8,7 +8,9 @@ public class MathSpawning : GameBehaviour<MathSpawning>
 {
 
     public GameObject foodPrefab;
-    private List<GameObject> FoodGenerated = new List<GameObject>();
+    public List<GameObject> FoodGenerated = new List<GameObject>();
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,7 +34,11 @@ public class MathSpawning : GameBehaviour<MathSpawning>
             Vector3 pos = RandomSpawnPoint();
             GameObject food = Instantiate(foodPrefab, pos, Quaternion.identity);
             FoodGenerated.Add(food);
-            TextMeshPro answerText = food.GetComponentInChildren<TextMeshPro>(true);
+
+
+            //give food dummy answers 
+
+            TMP_Text answerText = food.GetComponentInChildren<TMP_Text>(true);
 
             if (i==0) //make correct answer
             {
@@ -44,9 +50,7 @@ public class MathSpawning : GameBehaviour<MathSpawning>
 
         }
 
-        //give food dummy answers 
-
-        //if correct food is eaten, delete all food
+        
     }
 
     Vector3 RandomSpawnPoint()
@@ -54,4 +58,15 @@ public class MathSpawning : GameBehaviour<MathSpawning>
         Vector3 pos = new Vector3(RandomFloatBetweenTwoFloats(-24, 24), 1f, RandomFloatBetweenTwoFloats(-24, 24));
         return pos;
     }
+
+    public void DestroyFood()
+    {
+        GameObject[] food = GameObject.FindGameObjectsWithTag("Food");
+        foreach(GameObject foodToDestroy in food)
+            GameObject.Destroy(foodToDestroy);
+        FoodGenerated.Clear();
+        
+    }
+
+
 }
