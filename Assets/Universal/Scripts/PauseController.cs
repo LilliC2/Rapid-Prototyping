@@ -21,6 +21,7 @@ public class PauseController : GameBehaviour
         {
             Pause();
         }
+
     }
 
    public void Pause()
@@ -33,6 +34,8 @@ public class PauseController : GameBehaviour
         pausePanel.SetActive(isPaused);
         Time.timeScale = isPaused ? 0 : 1; //if isPaused is true, timeScale 0 else 1
     }
+
+
 
     public void Exit()
     {

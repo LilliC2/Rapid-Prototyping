@@ -34,6 +34,7 @@ namespace prototype4
             {
 
                 case GameStates.Spawning:
+
                     solved = false;
                     DifficultyCheck();
                     if (!answerGen)
@@ -47,7 +48,7 @@ namespace prototype4
                     }
 
 
-                    if (_MS.FoodGenerated.Count < 4)
+                    if (_MS.FoodGenerated.Count == 0)
                     {
                         print("SPAWNING");
                         ExecuteAfterFrames(20, () => _MS.SpawnFood()); 
@@ -72,7 +73,7 @@ namespace prototype4
 
                     inGanePanel.SetActive(false);
                     losePanel.SetActive(true);
-                    answeredSolved.text = "Answered solved: " + answeredSolved;
+                    answeredSolved.text = "Answered solved: " + answersSolved;
 
                     break;
             }

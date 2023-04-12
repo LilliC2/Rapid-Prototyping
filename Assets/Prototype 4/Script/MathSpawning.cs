@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MathSpawning : GameBehaviour<MathSpawning>
 {
 
-    public GameObject foodPrefab;
+    public GameObject[] foodPrefab;
     public List<GameObject> FoodGenerated = new List<GameObject>();
 
 
@@ -32,7 +33,9 @@ public class MathSpawning : GameBehaviour<MathSpawning>
         for (int i = 0; i < 4; i++)
         {
             Vector3 pos = RandomSpawnPoint();
-            GameObject food = Instantiate(foodPrefab, pos, Quaternion.identity);
+            int r = RandomIntBetweenTwoInt(0, foodPrefab.Length);
+            GameObject food = Instantiate(foodPrefab[r], pos, foodPrefab[r].transform.rotation);
+            print(food.name);
             FoodGenerated.Add(food);
 
 
@@ -43,7 +46,6 @@ public class MathSpawning : GameBehaviour<MathSpawning>
             if (i==0) //make correct answer
             {
                 answerText.text = _EG.correctAnswer.ToString();
-                food.GetComponent<Renderer>().material.color = Color.green;
             }
             else answerText.text = _EG.dummyAnswers[i].ToString();
 

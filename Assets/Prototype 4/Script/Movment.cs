@@ -21,6 +21,8 @@ public class Movment : GameBehaviour<Movment>
     private List<Vector3> PositionHistory = new List<Vector3>();
     bool antTunnel = false;
 
+    public GameObject dirtParticleGO;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,22 +81,21 @@ public class Movment : GameBehaviour<Movment>
         switch(_wallName)
         {
             case "TopWall":
-                transform.position = new Vector3(transform.position.x, transform.position.y, -26);
+                transform.position = new Vector3(transform.position.x, transform.position.y, -24);
                 break;
             case "BottomWall":
-                transform.position = new Vector3(transform.position.x, transform.position.y, 26);
+                transform.position = new Vector3(transform.position.x, transform.position.y, 24);
                 break;
             case "LeftWall":
-                transform.position = new Vector3(26f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(24, transform.position.y, transform.position.z);
                 break;
             case "RightWall":
-                transform.position = new Vector3(-26f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(-24, transform.position.y, transform.position.z);
                 break;
 
 
 
         }
-        ExecuteAfterSeconds(2f, () => ResetTunnel());
     }
 
 
@@ -102,12 +103,13 @@ public class Movment : GameBehaviour<Movment>
     {
         if (other.CompareTag("Walls"))
         {
-            if(!antTunnel)
-            {
-                ExecuteAfterSeconds(0.5f, () => AntTunnel(other.name));
-            }
-            
-            
+            ExecuteAfterSeconds(0.05f, () => AntTunnel(other.name));
+            ParticleSystem dirtParticle = dirtParticleGO.GetComponentInChildren<ParticleSystem>(true);
+            dirtParticle.Play(true);
+
+
+
+
         }
         if (other.CompareTag("Food"))
         {
