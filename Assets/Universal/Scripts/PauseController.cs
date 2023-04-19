@@ -21,7 +21,8 @@ public class PauseController : GameBehaviour
         {
             Pause();
         }
-
+        if (isPaused) Time.timeScale = 0;
+        else Time.timeScale = 1;
     }
 
    public void Pause()
@@ -32,7 +33,8 @@ public class PauseController : GameBehaviour
         isPaused = !isPaused; //flip switch
         print("Paused: " + isPaused);
         pausePanel.SetActive(isPaused);
-        Time.timeScale = isPaused ? 0 : 1; //if isPaused is true, timeScale 0 else 1
+        
+        //Time.timeScale = isPaused ? 0 : 1; //if isPaused is true, timeScale 0 else 1
     }
 
 
