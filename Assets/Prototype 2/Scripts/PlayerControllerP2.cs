@@ -2,6 +2,8 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.UI;
 
 public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
 {
@@ -19,11 +21,13 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
 
     [Header("Player Stats")]
     public float playerHealth = 100; //temp\
+    public float playerHealthMax = 100; //temp\
     public float skillPoints = 0;
     public float expPoints = 0;
     public float expTilLvlUp = 10;
     public float playerLvl = 0;
-    
+    public Image playerHPBar;
+    bool tookDamage;
 
     [Header("Bullet Stats")]
     public GameObject firingPoint;
@@ -34,36 +38,39 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
     public float bulletDmg;
     public float bulletForce;
 
-
-
     [Header("UI")]
     public GameObject skillTree;
     float tweenTime = 2;
 
+    public ParticleSystem gun;
+    Camera camCam;
 
     private void Start()
     {
-
+        characterController = GetComponent<CharacterController>();
         skillTree.SetActive(false);
+        camCam = FindObjectOfType<Camera>();
     }
 
     // Update is called once per frame
     void Update()
     {
         Raycast();
-
+        
         //Shoot
         if (Input.GetMouseButton(0))
         {
-            print("mouse 0");
             FireProjectile();
+            ParticleSystem dirtParticle = gun.GetComponentInChildren<ParticleSystem>(true);
+            gun.Play(true);
         }
 
         //open skill tree
         if (Input.GetKeyDown(KeyCode.E))
         {
-            print("open tree");
-            skillTree.SetActive(true);
+            if(skillTree.active == false) skillTree.SetActive(true);
+            else skillTree.SetActive(false);
+
         }
 
 
@@ -75,11 +82,6 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
         #region movement
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-        }
-
 
         //inputs
         float horizontal = Input.GetAxisRaw("Horizontal");
@@ -87,6 +89,13 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
         characterController.Move(direction.normalized * speed * Time.deltaTime);
+
+        velocity += Physics.gravity * Time.deltaTime;
+
+        characterController.Move(velocity);
+
+
+        if (gameObject.transform.position.y != 0.5) gameObject.transform.position = new Vector3(gameObject.transform.position.x, 0.5f, gameObject.transform.position.z);
 
         #endregion
 
@@ -151,7 +160,14 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
 
     void Hit()
     {
+            
+        print(playerHealth);
+        playerHPBar.fillAmount = playerHealth / playerHealthMax;
         playerHealth -= _EM2.enemyDmg;
+        if(playerHealth <= 0)
+        {
+            _EM2.waveStatus = EnemyManagerP2.WaveStatus.Lost;
+        }
         this.transform.GetComponent<Renderer>().material.DOColor(Color.red, 0.5f);
         this.transform.GetComponent<Renderer>().material.DOColor(Color.white,0.5f);
     }
@@ -159,7 +175,7 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
     void ShakeCamera()
     {
         _UI.TweenScore();
-        Camera.main.DOShakePosition(tweenTime / 2, 0.4f);
+        camCam.DOShakePosition(tweenTime / 2, 0.4f);
     }
 
     void ResetBullet()
@@ -171,8 +187,30 @@ public class PlayerControllerP2 : GameBehaviour<PlayerControllerP2>
     {
         if((collision.gameObject.CompareTag("Enemy")))
         {
+
             Hit();
         }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if ((collision.gameObject.CompareTag("Enemy")))
+        {
+            if (!tookDamage)
+            {
+                Hit();
+                ExecuteAfterSeconds(1, () => ResetHit());
+                tookDamage = true;
+                
+            }
+            
+            
+        }
+    }
+
+    void ResetHit()
+    {
+        tookDamage = false;
     }
 
 }

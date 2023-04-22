@@ -4,12 +4,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UISkillTree : GameBehaviour
+public class UISkillTree : GameBehaviour<UISkillTree>
 {
     [Header("Feedback")]
     public GameObject skillMaxedImage;
     public GameObject noPointsImage;
     public GameObject skillLockedImage;
+
+    public TMP_Text skillGainedText;
+
+    public TMP_Text waveComplete;
 
     [Header("Skill 1 - Bullet Time")]
     int skill1Modifers = 4;
@@ -32,6 +36,7 @@ public class UISkillTree : GameBehaviour
     void Update()
     {
         UnlockSkills();
+
     }
 
     void UnlockSkills()
@@ -67,6 +72,7 @@ public class UISkillTree : GameBehaviour
 
             //upgrade to skill
             _PC2.timeBetweenShots -= 0.2f;
+            StartCoroutine(SkillGained("Time between shots improved by 0.2 seconds!"));
             print("Time between shots improved by 0.2 seconds!");
 
 
@@ -110,6 +116,7 @@ public class UISkillTree : GameBehaviour
 
             //upgrade to skill
             _PC2.bulletSpeed += 0.5f;
+            StartCoroutine(SkillGained("Bullet speed increased by 0.5!"));
             print("Bullet speed increased by 0.5!");
 
 
@@ -130,6 +137,15 @@ public class UISkillTree : GameBehaviour
         
     }
 
+    IEnumerator SkillGained(string _improvement)
+    {
+        skillGainedText.text = _improvement;
+        skillGainedText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3);
+        skillGainedText.gameObject.SetActive(false);
+
+    }
+
     IEnumerator SkillMaxed()
     {
         skillMaxedImage.SetActive(true);
@@ -148,5 +164,7 @@ public class UISkillTree : GameBehaviour
         yield return new WaitForSeconds(2);
         noPointsImage.SetActive(false);
     }
+
+
 
 }

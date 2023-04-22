@@ -2,21 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManagerP2 : MonoBehaviour
+namespace prototype2
 {
-    // Start is called before the first frame update
-    void Start()
+    public class GameManagerP2 : GameBehaviour<GameManagerP2>
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //track waves
+        public enum GameState {  Playing, Gameover}
+        public GameState gameState;
+        public GameObject gameOverPanel;
+        // Start is called before the first frame update
+        void Start()
+        {
 
-        //pause game if in skill trre OR only skill tree when in a wave?
+        }
 
+        // Update is called once per frame
+        void Update()
+        {
+            switch(gameState)
+            {
+                case GameState.Playing:
+                    Time.timeScale = 1;
+                    break;
+                case GameState.Gameover:
+                    Time.timeScale = 0;
+                    gameOverPanel.SetActive(true);
+                    break;
+            }
 
+        }
     }
 }
+
+

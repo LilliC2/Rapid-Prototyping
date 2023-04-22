@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class EnemyManagerP2 : GameBehaviour<EnemyManagerP2>
@@ -9,20 +11,24 @@ public class EnemyManagerP2 : GameBehaviour<EnemyManagerP2>
 
     public GameObject[] spawnPoints;
 
-    float waveNum = 0;
+    public float waveNum = 1;
 
     public float enemyHealth = 20;
     public float enemyDmg = 2;
 
-    int enemiesSpawning = 5;
+    int enemiesSpawning = 0  ;
     int currentEnemyCount;
 
-    float timeBetweenWaves = 1;
+    float timeBetweenWaves = 3;
 
     public enum WaveStatus { Fight, Wait, Lost}
     
-    WaveStatus waveStatus;
+    public WaveStatus waveStatus;
     bool spawned;
+
+    public TMP_Text waveNumText;
+    public GameObject waveComplete;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -38,9 +44,13 @@ public class EnemyManagerP2 : GameBehaviour<EnemyManagerP2>
         {
             //enemies have spawned and are being fought
             case WaveStatus.Fight:
-                
-                if(!spawned)
+                waveComplete.SetActive(false);
+
+                if (!spawned)
                 {
+                    waveNum++;
+                    waveNumText.text = "Wave " + waveNum;
+                    enemiesSpawning += 2;
                     SpawnEnemies();
                     spawned = true;
                 }
@@ -48,19 +58,21 @@ public class EnemyManagerP2 : GameBehaviour<EnemyManagerP2>
                 CheckEnemies();
                 if(currentEnemyCount == 0)
                 {
-                    waveNum++;
-                    enemiesSpawning += 2;
                     waveStatus = WaveStatus.Wait;
                 }
                 break;
             //break between waves
             case WaveStatus.Wait:
+                waveComplete.SetActive(true);
+                spawned = false;
+                _PC2.playerHealth = _PC2.playerHealthMax;
                 print("Wave status waiting");
-                spawned = true;
                 StartCoroutine(Fight());
                 break;
             //if player dies, destroy all enemies
             case WaveStatus.Lost:
+                _GM2.gameState = prototype2.GameManagerP2.GameState.Gameover;
+
                 break;
         }
 
@@ -100,7 +112,6 @@ public class EnemyManagerP2 : GameBehaviour<EnemyManagerP2>
     {
         print("waiting");
         yield return new WaitForSeconds(timeBetweenWaves);
-        
         waveStatus = WaveStatus.Fight;
     }
 
