@@ -574,9 +574,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2977189372354791568}
-        m_TargetAssemblyTypeName: Pause, Assembly-CSharp
-        m_MethodName: Resume
+      - m_Target: {fileID: 4596695847970724163}
+        m_TargetAssemblyTypeName: GameOver, Assembly-CSharp
+        m_MethodName: ReloadScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -708,8 +708,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2977189372354791568}
-        m_TargetAssemblyTypeName: Pause, Assembly-CSharp
+      - m_Target: {fileID: 4596695847970724163}
+        m_TargetAssemblyTypeName: GameOver, Assembly-CSharp
         m_MethodName: ExitToTitle
         m_Mode: 1
         m_Arguments:
@@ -842,8 +842,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2977189372354791568}
-        m_TargetAssemblyTypeName: Pause, Assembly-CSharp
+      - m_Target: {fileID: 4596695847970724163}
+        m_TargetAssemblyTypeName: GameOver, Assembly-CSharp
         m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
@@ -1004,7 +1004,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2977189371998114641
 Transform:
   m_ObjectHideFlags: 0
@@ -1030,14 +1030,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2977189372354791571}
-  - component: {fileID: 2977189372354791568}
+  - component: {fileID: 4596695847970724163}
   m_Layer: 0
   m_Name: Victory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2977189372354791571
 Transform:
   m_ObjectHideFlags: 0
@@ -1054,7 +1054,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2977189372354791568
+--- !u!114 &4596695847970724163
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1063,7 +1063,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2977189372354791569}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd243775068cfff4eb9894ce6bd14b4b, type: 3}
+  m_Script: {fileID: 11500000, guid: 163c394bede0e5a47b41f4fce4fbeb9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 2977189371998114646}

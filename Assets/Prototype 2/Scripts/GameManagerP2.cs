@@ -25,6 +25,7 @@ namespace prototype2
                     Time.timeScale = 1;
                     break;
                 case GameState.Gameover:
+
                     Time.timeScale = 0;
                     gameOverPanel.SetActive(true);
                     break;

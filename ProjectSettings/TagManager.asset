@@ -10,6 +10,9 @@ TagManager:
   - Walls
   - Bullet
   - Food
+  - FxTemporaire
+  - Fly
+  - Victory
   layers:
   - Default
   - TransparentFX

@@ -25,12 +25,22 @@ namespace prototype3
         bool shot = false;
         bool move = false;
 
+        public int flyCount = 0;
+        public int fliesInScene;
+
+        public GameObject victoryPanel;
+        int currentFlyCount;
+
         // Start is called before the first frame update
         void Start()
         {
 
             hookshotObject.SetActive(false);
             rb = GetComponent<Rigidbody>();
+            _UI3.UpdateFlyCount(flyCount);
+            var flies = GameObject.FindGameObjectsWithTag("Fly");
+            fliesInScene = flies.Length;
+            currentFlyCount = 0;
         }
 
         // Update is called once per frame
@@ -44,16 +54,21 @@ namespace prototype3
             {
                 if (Physics.Raycast(firingPoint.transform.position, firingPoint.transform.forward, out RaycastHit raycastHit))
                 {
-                    if (raycastHit.collider.CompareTag("Walls"))
+                    if (raycastHit.collider.CompareTag("Walls") )
                     {
-                        _UI2.gripMeter.fillAmount = 1;
-                        shot = true;
-                        hookshotObject.SetActive(true);
+                        
                         destination = new Vector3(raycastHit.point.x,raycastHit.point.y,5);
-                        destinationPoint = raycastHit.point;
-                        hookshot.SetPosition(1, raycastHit.point);
 
-                        move = true;
+                        if(Vector3.Distance(destination,gameObject.transform.position) < 30)
+                        {
+                            shot = true;
+                            hookshotObject.SetActive(true);
+                            destinationPoint = raycastHit.point;
+                            hookshot.SetPosition(1, raycastHit.point);
+
+                            move = true;
+                        }
+                        
 
                     }
                 }
@@ -99,7 +114,7 @@ namespace prototype3
                 float count = 3;
 
                 count -= 1 * Time.deltaTime;
-                _UI2.GripMeterCountdown(count);
+                _UI3.GripMeterCountdown(count);
                 calledGrip = true;
 
                 print("Holding!");
@@ -126,9 +141,57 @@ namespace prototype3
                 rb.useGravity = false;
 
             }
+
+
+            
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if(other.CompareTag("Victory"))
+            {
+                //if they have all the flies
+                if(flyCount== fliesInScene)
+                {
+                    victoryPanel.SetActive(true);
+                }
+                else
+                {
+                    _UI3.FliesLeft(fliesInScene - flyCount);
+                    _UI3.fliesLeftPanel.SetActive(true);
+                }
 
+
+            }
+            if (other.CompareTag("Fly"))
+            {
+                print("COLLIDE WITH FLYU");
+                //make sure its only once
+                
+                flyCount++;
+                if(currentFlyCount + 1 != flyCount)
+                {
+                    flyCount = currentFlyCount + 1;
+                    currentFlyCount = flyCount;
+                }
+                _UI3.UpdateFlyCount(flyCount);
+                Destroy(other.gameObject);
+            }
+
+            if (other.CompareTag("Enemy"))
+            {
+                print("BIRD");
+                victoryPanel.SetActive(true);
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Victory"))
+            {
+                _UI3.fliesLeftPanel.SetActive(false);
+            }
+        }
 
     }
 }

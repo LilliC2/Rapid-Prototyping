@@ -17,7 +17,7 @@ public class GameBehaviour : LC.Behaviour //inherits from
     protected static Movment _PC4 { get { return Movment.Instance; } }
     protected static UISkillTree _UIST { get { return UISkillTree.Instance; } }
     protected static GameManagerP2 _GM2 { get { return GameManagerP2.Instance; } }
-    protected static prototype3.UIManager _UI2 { get { return prototype3.UIManager.Instance; } }
+    protected static prototype3.UIManager _UI3 { get { return prototype3.UIManager.Instance; } }
     protected static prototype4.GameManager _GM4 { get { return prototype4.GameManager.Instance; } }
 
     public enum Gamestate { Title, Pause, Instructions, Playing, GameOver }

@@ -13,6 +13,10 @@ namespace prototype3
         public Image gripMeter;
         float timeRemaining;
         
+        public TMP_Text flyCountText;
+        public TMP_Text fliesLeftText;
+        public GameObject fliesLeftPanel;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -42,6 +46,16 @@ namespace prototype3
         public void CloseInstructions()
         {
             instructionPanel.SetActive(false);
+        }
+
+        public void UpdateFlyCount(int _count)
+        {
+            flyCountText.text = "Flies Caught: " + _count;
+        }
+
+        public void FliesLeft(int _count)
+        {
+            fliesLeftText.text = "Collect the remaining " + _count + " flies to exit!";
         }
     }
 }
